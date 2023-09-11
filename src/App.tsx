@@ -1,14 +1,12 @@
-import { useState } from 'react';
 import './App.css';
-import { AlertDemo } from './Components/Alert';
+import MainLayout from './Layout/MainLayout';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      <h1 className="text-3xl underline">Hello</h1>
-      <AlertDemo />
+      <div>
+        <MainLayout />
+      </div>
     </>
   );
 }
