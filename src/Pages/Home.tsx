@@ -1,5 +1,13 @@
+import Header from '@/components/home/Header';
+import RecentBooks from '@/components/home/RecentBooks';
+
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <>
+      <Header />
+      <RecentBooks />
+    </>
+  );
 };
 
 export default Home;
