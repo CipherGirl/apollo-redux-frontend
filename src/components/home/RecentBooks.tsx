@@ -1,7 +1,7 @@
 import {
   useGetBooksQuery,
   useGetRecentBooksQuery,
-} from '@/Redux/fetaures/bookApi';
+} from '@/Redux/features/bookApi';
 import useInView from '@/hooks/useInView';
 import { IBook } from '@/types/globalTypes';
 
@@ -11,7 +11,7 @@ const RecentBooks = () => {
   return (
     <div
       ref={ref}
-      className="container w-screen min-h-[calc(100vh-148px)] mb-12"
+      className="container w-screen min-h-[calc(100vh-148px)] mb-12 pt-16"
     >
       <h1 className="text-3xl font-bold text-center">Recent Books</h1>
       {isLoading ? (
