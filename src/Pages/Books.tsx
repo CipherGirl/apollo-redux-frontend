@@ -2,6 +2,7 @@ import { useGetBooksQuery } from '@/Redux/features/bookApi';
 import useInView from '@/hooks/useInView';
 import { IBook } from '@/types/globalTypes';
 import { useNavigate } from 'react-router-dom';
+import editIcon from '/editIcon.svg';
 
 const Books = () => {
   const navigate = useNavigate();
@@ -25,20 +26,34 @@ const Books = () => {
               }`}
             >
               <div
-                className={`flex-none w-[19rem] bg-white shadow-lg rounded-lg flex gap-4`}
+                className={`flex-none w-[19rem] bg-white shadow-lg rounded-lg flex gap-4 relative`}
               >
                 <img
                   src={book.imageURL}
                   className="w-1/2 h-full rounded-l-lg object-cover"
                   onClick={() => navigate(`/book-details/${book._id}`)}
                 />
-                <div className="h-full flex flex-col my-auto">
-                  <h2 className="text-xl font-bold mb-2">{book.title}</h2>
-                  <h2 className="text-md mb-2">{book.author}</h2>
-                  <h3 className="text-sm italic">{book.genre}</h3>
-                  <h3 className="text-xs">
-                    Published in {book.publicationDate.split('-')[0]}
-                  </h3>
+                <div className="w-full h-full flex flex-col">
+                  <div className="flex justify-end">
+                    <img
+                      src={editIcon}
+                      width={20}
+                      className="m-1 cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1 flex flex-col justify-center">
+                    <h2
+                      className="text-xl font-bold m-2 ms-0 cursor-pointer"
+                      onClick={() => navigate(`/book-details/${book._id}`)}
+                    >
+                      {book.title}
+                    </h2>
+                    <h2 className="text-md mb-2">{book.author}</h2>
+                    <h3 className="text-sm italic">{book.genre}</h3>
+                    <h3 className="text-xs">
+                      Published in {book.publicationDate.split('-')[0]}
+                    </h3>
+                  </div>
                 </div>
               </div>
             </div>

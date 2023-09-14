@@ -9,8 +9,18 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from '../components/ui/dropdown-menu';
+import { useAppDispatch, useAppSelector } from '@/Redux/hooks';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { setUser } from '@/Redux/features/user/userSlice';
 
 export default function Navbar() {
+  const { user } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
+  const handleSignOut = () => {
+    signOut(auth).then(() => dispatch(setUser(null)));
+  };
   return (
     <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
       <div className="h-full w-full bg-white/60">
@@ -33,15 +43,13 @@ export default function Navbar() {
                   <Link to="/books">Books</Link>
                 </Button>
               </li>
-              <li>
-                <Button variant="link" asChild>
-                  <Link to="/checkout">Checkout</Link>
-                </Button>
-              </li>
-              <li>
-                <Button variant="ghost">Search</Button>
-              </li>
-              <li></li>
+              {user && (
+                <li>
+                  <Button variant="link" asChild>
+                    <Link to="/add-book">Add Book</Link>
+                  </Button>
+                </li>
+              )}
               <li className="ml-5">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="outline-none">
@@ -57,18 +65,24 @@ export default function Navbar() {
                       Profile
                     </DropdownMenuItem>
 
-                    <>
-                      <Link to="/login">
-                        <DropdownMenuItem className="cursor-pointer">
-                          Login
-                        </DropdownMenuItem>
-                      </Link>
-                      <Link to="/signup">
-                        <DropdownMenuItem className="cursor-pointer">
-                          Signup
-                        </DropdownMenuItem>
-                      </Link>
-                    </>
+                    {user.email ? (
+                      <DropdownMenuItem onClick={() => handleSignOut()}>
+                        Logout
+                      </DropdownMenuItem>
+                    ) : (
+                      <>
+                        <Link to="/login">
+                          <DropdownMenuItem className="cursor-pointer">
+                            Login
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to="/signup">
+                          <DropdownMenuItem className="cursor-pointer">
+                            Signup
+                          </DropdownMenuItem>
+                        </Link>
+                      </>
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </li>
