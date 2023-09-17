@@ -1,7 +1,7 @@
 import {
   useGetBooksQuery,
   useGetRecentBooksQuery,
-} from '@/Redux/features/bookApi';
+} from '@/Redux/features/books/bookApi';
 import useInView from '@/hooks/useInView';
 import { IBook } from '@/types/globalTypes';
 

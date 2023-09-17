@@ -1,4 +1,4 @@
-import { useGetSingleBookQuery } from '@/Redux/features/bookApi';
+import { useGetSingleBookQuery } from '@/Redux/features/books/bookApi';
 import { IBook } from '@/types/globalTypes';
 import React from 'react';
 import { useParams } from 'react-router-dom';
