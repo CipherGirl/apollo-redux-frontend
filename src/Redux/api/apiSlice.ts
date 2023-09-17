@@ -5,6 +5,6 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://apollo-redux-backend.vercel.app',
   }),
-  tagTypes: ['books', 'recent-books', 'review'],
+  tagTypes: ['books', 'recent-books', 'review', 'book'],
   endpoints: () => ({}),
 });

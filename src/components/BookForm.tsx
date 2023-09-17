@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import {
   useEditBookMutation,
@@ -18,16 +17,13 @@ interface BookFormInputs {
   imageURL: string;
   publicationDate: string;
 }
-export function BookForm() {
+export function BookForm({ id }: { id: string | undefined }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
   } = useForm<BookFormInputs>();
-
-  const { id } = useParams();
-  console.log(id);
 
   const { data: book } = useGetSingleBookQuery(id, {
     skip: !id ? true : false,
@@ -54,7 +50,7 @@ export function BookForm() {
       imageURL: data.imageURL,
       publicationDate: data.publicationDate,
     };
-    id ? postBook(bookData) : editBook(bookData);
+    id ? editBook({ id: id, data: bookData }) : postBook(bookData);
   };
 
   return (

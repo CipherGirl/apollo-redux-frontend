@@ -12,6 +12,7 @@ const bookApi = api.injectEndpoints({
     }),
     getSingleBook: builder.query({
       query: (id) => `/book/${id}`,
+      providesTags: (_result, _error, id) => [{ type: 'book', id }],
     }),
     postBook: builder.mutation({
       query: (data) => ({
@@ -22,12 +23,16 @@ const bookApi = api.injectEndpoints({
       invalidatesTags: ['books', 'recent-books'],
     }),
     editBook: builder.mutation({
-      query: (data) => ({
-        url: `/book`,
+      query: ({ id, data }) => ({
+        url: `/book/${id}`,
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: ['books', 'recent-books'],
+      invalidatesTags: (_result, _error, context) => [
+        { type: 'book', id: context.id },
+        { type: 'books' },
+        { type: 'recent-books' },
+      ],
     }),
     deleteBook: builder.mutation({
       query: (id) => ({
