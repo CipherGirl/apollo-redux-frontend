@@ -9,6 +9,7 @@ import {
   useGetSingleBookQuery,
   usePostBookMutation,
 } from '@/Redux/features/books/bookApi';
+import toast from 'react-hot-toast';
 
 interface BookFormInputs {
   title: string;
@@ -23,16 +24,24 @@ export function BookForm({ id }: { id: string | undefined }) {
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
   } = useForm<BookFormInputs>();
 
   const { data: book } = useGetSingleBookQuery(id, {
     skip: !id ? true : false,
   });
 
-  const [postBook] = usePostBookMutation();
-  const [editBook] = useEditBookMutation();
+  const [
+    postBook,
+    { isLoading: isPostLoading, isSuccess: isPostSuccess, error: errorPost },
+  ] = usePostBookMutation();
+  const [
+    editBook,
+    { isLoading: isEditLoading, isSuccess: isEditSuccess, error: errorEdit },
+  ] = useEditBookMutation();
 
   useEffect(() => {
+    reset();
     if (book && id) {
       setValue('title', book.title);
       setValue('author', book.author);
@@ -41,6 +50,13 @@ export function BookForm({ id }: { id: string | undefined }) {
       setValue('publicationDate', book.publicationDate);
     }
   }, [book, id, setValue]);
+
+  useEffect(() => {
+    isPostSuccess && toast.success('Added a new book successfully');
+    isEditSuccess && toast.success('Updated the book successfully');
+    errorPost?.data?.error && toast.error(errorPost?.data?.error);
+    errorEdit?.data?.error && toast.error(errorEdit?.data?.error);
+  }, [isPostSuccess, isEditSuccess, errorEdit, errorPost]);
 
   const onSubmit = (data: BookFormInputs) => {
     const bookData = {
@@ -125,7 +141,20 @@ export function BookForm({ id }: { id: string | undefined }) {
               <p className="text-red-700">{errors.publicationDate.message}</p>
             )}
           </div>
-          <Button>{id ? 'Edit' : 'Add'} New Book</Button>
+          <Button disabled={isEditLoading || isPostLoading}>
+            {isEditLoading || isPostLoading ? (
+              <div
+                className="text-center inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                role="status"
+              >
+                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                  Loading...
+                </span>
+              </div>
+            ) : (
+              `${id ? 'Edit' : 'Add New'} Book`
+            )}
+          </Button>
         </div>
       </form>
     </div>

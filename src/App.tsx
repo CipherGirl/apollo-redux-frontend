@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import './App.css';
 import MainLayout from './Layout/MainLayout';
+import { Toaster } from 'react-hot-toast';
 import { useAppDispatch } from './Redux/hooks';
 import { setLoading, setUser } from './Redux/features/user/userSlice';
 import { auth } from './lib/firebase';
@@ -23,6 +24,7 @@ function App() {
 
   return (
     <div>
+      <Toaster />
       <MainLayout />
     </div>
   );
