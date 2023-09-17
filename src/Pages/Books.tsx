@@ -1,13 +1,21 @@
-import { useGetBooksQuery } from '@/Redux/features/bookApi';
 import useInView from '@/hooks/useInView';
 import { IBook } from '@/types/globalTypes';
 import { useNavigate } from 'react-router-dom';
 import editIcon from '/editIcon.svg';
+import trashIcon from '/trashIcon.svg';
+import { useAppSelector } from '@/Redux/hooks';
+import {
+  useDeleteBookMutation,
+  useGetBooksQuery,
+} from '@/Redux/features/books/bookApi';
 
 const Books = () => {
   const navigate = useNavigate();
   const [ref, inView] = useInView();
+  const { user } = useAppSelector((state) => state.user);
   const { data: bookData, isLoading } = useGetBooksQuery(undefined);
+  const [deleteBook] = useDeleteBookMutation();
+
   return (
     <div ref={ref} className="container w-screen py-20">
       <h1 className="text-3xl font-bold">All Books</h1>
@@ -34,13 +42,24 @@ const Books = () => {
                   onClick={() => navigate(`/book-details/${book._id}`)}
                 />
                 <div className="w-full h-full flex flex-col">
-                  <div className="flex justify-end">
-                    <img
-                      src={editIcon}
-                      width={20}
-                      className="m-1 cursor-pointer"
-                    />
-                  </div>
+                  {user.email ? (
+                    <div className="flex justify-end">
+                      <img
+                        src={editIcon}
+                        width={20}
+                        className="m-1 cursor-pointer"
+                        onClick={() => navigate(`/edit-book/${book._id}`)}
+                      />
+                      <img
+                        src={trashIcon}
+                        width={20}
+                        className="m-1 cursor-pointer"
+                        onClick={() => deleteBook(book._id)}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-5 h-7"></div>
+                  )}
                   <div className="flex-1 flex flex-col justify-center">
                     <h2
                       className="text-xl font-bold m-2 ms-0 cursor-pointer"
