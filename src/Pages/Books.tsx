@@ -9,20 +9,35 @@ import {
   useGetBooksQuery,
 } from '@/Redux/features/books/bookApi';
 import { Input } from '@/components/ui/input';
-import { setSearch } from '@/Redux/features/filter/filterSlice';
+import { setGenre, setSearch } from '@/Redux/features/filter/filterSlice';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const Books = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [ref, inView] = useInView();
   const { user } = useAppSelector((state) => state.user);
-  const { searchKeyword } = useAppSelector((state) => state.filter);
+  const { searchKeyword, showByGenre } = useAppSelector(
+    (state) => state.filter
+  );
   const { data: bookData, isLoading } = useGetBooksQuery(undefined);
   const [deleteBook] = useDeleteBookMutation();
 
   const filterBySearchKeyword = (book: IBook) => {
-    if (!searchKeyword) return true; // If no search keyword is provided, return all books
+    // If showByGenre is set to a specific genre (not "All"), filter by that genre first
+    if (showByGenre !== 'all' && book?.genre !== showByGenre) return false;
+
+    // If no search keyword is provided, return the filtered results (based on genre)
+    if (!searchKeyword) return true;
 
     const keyword = searchKeyword.toLowerCase();
 
@@ -32,6 +47,15 @@ const Books = () => {
       book?.genre?.toLowerCase().includes(keyword)
     );
   };
+
+  function getUniqueValuesByProp(arr: IBook[], prop: string): string[] {
+    return arr.reduce((uniqueValues, obj) => {
+      if (!uniqueValues.includes(obj[prop])) {
+        uniqueValues.push(obj[prop]);
+      }
+      return uniqueValues;
+    }, []);
+  }
 
   return (
     <div ref={ref} className="container w-screen py-20">
@@ -49,16 +73,36 @@ const Books = () => {
         <h2> Loading...</h2>
       ) : (
         <>
-          <div className="relative my-6">
-            <Input
-              onChange={(e) => dispatch(setSearch(e.target.value))}
-              className="w-1/3 "
-              placeholder="search book.."
-            />
-            <img
-              src="https://www.freepnglogos.com/uploads/search-png/search-icon-clip-art-clkerm-vector-clip-art-online-22.png"
-              className="absolute  w-[2%] top-2 right-[67%]"
-            />
+          <div className="w-full flex justify-between items-center">
+            <div className="relative my-6">
+              <Input
+                onChange={(e) => dispatch(setSearch(e.target.value))}
+                className="w-[400px] "
+                placeholder="search book.."
+              />
+              <img
+                src="https://www.freepnglogos.com/uploads/search-png/search-icon-clip-art-clkerm-vector-clip-art-online-22.png"
+                className="absolute  w-[7%] top-[6px] right-[6px]"
+              />
+            </div>
+            <Select onValueChange={(genre) => dispatch(setGenre(genre))}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter By Genre" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Genre</SelectLabel>
+                  <SelectItem value="all">All Book</SelectItem>
+                  {getUniqueValuesByProp(bookData.data, 'genre').map(
+                    (genre: string, index: number) => (
+                      <SelectItem value={genre} key={index}>
+                        {genre}
+                      </SelectItem>
+                    )
+                  )}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid grid-cols-4 gap-6">
             {bookData.data
