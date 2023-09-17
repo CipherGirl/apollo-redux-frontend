@@ -1,5 +1,7 @@
 import { useGetSingleBookQuery } from '@/Redux/features/books/bookApi';
-import { IBook } from '@/types/globalTypes';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { IBook, IReview } from '@/types/globalTypes';
 import { useParams } from 'react-router-dom';
 
 const BookDetail = () => {
@@ -8,13 +10,12 @@ const BookDetail = () => {
   const book: IBook | undefined = queryResult.data;
   const isLoading: boolean = queryResult.isLoading;
 
-  console.log(book);
   return isLoading ? (
     <div>Loading...</div>
   ) : (
-    <div className="w-[90vw] flex flex-col items-center pt-16">
-      <div className="w-1/2 flex justify-around">
-        <img src={book?.imageURL} className="rounded-lg object-cover" />
+    <div className="w-screen flex flex-col justify-center items-center gap-12 pt-10">
+      <div className="w-full flex justify-center items-center gap-6">
+        <img src={book?.imageURL} className="rounded-lg object-cover w-1/6" />
         <div className="h-full flex flex-col my-auto">
           <h2 className="text-4xl font-bold mb-2">{book?.title}</h2>
           <h2 className="text-3xl mb-2">{book?.author}</h2>
@@ -24,10 +25,34 @@ const BookDetail = () => {
           </h3>
         </div>
       </div>
-      <div>
-        {book?.reviews.map((review) => (
-          <h1>{review}</h1>
-        ))}
+      <div className="w-[50vw] flex flex-col items-center">
+        <Textarea className="h-24" placeholder="Write your review here.." />
+        <Button className="self-end mt-4" variant={'outline'}>
+          Send
+        </Button>
+        {book?.reviews.map((review: IReview, index: number) => {
+          console.log(review);
+          return (
+            <div className="w-full border rounded-md my-4 p-4" key={index}>
+              <div className="flex items-center gap-2 mb-4">
+                <img
+                  width={24}
+                  height={24}
+                  src="https://cdn-icons-png.flaticon.com/512/6596/6596121.png"
+                />
+                <h2>{review.email}</h2>
+              </div>
+              <p className="italic text-gray-800">
+                A timeless classic that deeply resonates with readers of all
+                ages. A timeless classic that deeply resonates with readers of
+                all ages. A timeless classic that deeply resonates with readers
+                of all ages. A timeless classic that deeply resonates with
+                readers of all ages. A timeless classic that deeply resonates
+                with readers of all ages.
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
