@@ -7,15 +7,12 @@ import { loginUser, signInWithGoogle } from '@/Redux/features/user/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/Redux/hooks';
-
-type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
-
 interface LoginFormInputs {
   email: string;
   password: string;
 }
 
-export function LoginForm({ className, ...props }: UserAuthFormProps) {
+export function LoginForm() {
   const {
     register,
     handleSubmit,
@@ -29,13 +26,13 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
 
   useEffect(() => {
     if (user.email && !isLoading) {
-      if (location.state.path) {
+      if (location.state?.path) {
         navigate(location.state.path);
       } else {
         navigate('/');
       }
     }
-  }, [user.email, isLoading]);
+  }, [user.email, isLoading, location.state, navigate]);
 
   const onSubmit = (data: LoginFormInputs) => {
     dispatch(loginUser({ email: data.email, password: data.password }));
