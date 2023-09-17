@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
-import { loginUser } from '@/Redux/features/user/userSlice';
+import { loginUser, signInWithGoogle } from '@/Redux/features/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/Redux/hooks';
@@ -36,6 +36,10 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
     dispatch(loginUser({ email: data.email, password: data.password }));
   };
 
+  const handleGoogleSignIn = () => {
+    dispatch(signInWithGoogle());
+  };
+
   return (
     <div className="flex flex-col items-center justify-center p-4">
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
@@ -53,7 +57,9 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
               autoCorrect="off"
               {...register('email', { required: 'Email is required' })}
             />
-            {errors.email && <p className='text-red-700'>{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-700">{errors.email.message}</p>
+            )}
             <Input
               id="password"
               placeholder="your password"
@@ -62,7 +68,9 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
               autoComplete="password"
               {...register('password', { required: 'Password is required' })}
             />
-            {errors.password && <p className='text-red-700'>{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-700">{errors.password.message}</p>
+            )}
           </div>
           <Button>Login with email</Button>
         </div>
@@ -74,6 +82,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         variant="outline"
         type="button"
         className="flex items-center justify-between w-full relative"
+        onClick={() => handleGoogleSignIn()}
       >
         <p>Google</p>
         <img src="/images/google.png" className="absolute w-[7%] right-4" />

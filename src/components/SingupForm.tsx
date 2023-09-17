@@ -1,9 +1,14 @@
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
-import { createUser } from '@/Redux/features/user/userSlice';
+import {
+  createUser,
+  setUser,
+  signInWithGoogle,
+} from '@/Redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '@/Redux/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -26,13 +31,17 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
   const { user, error } = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    if (user) {
+    if (user.email) {
       navigate('/');
     }
   }, [user]);
 
   const onSubmit = (data: SignupFormInputs) => {
     dispatch(createUser({ email: data.email, password: data.password }));
+  };
+
+  const handleGoogleSignIn = () => {
+    dispatch(signInWithGoogle());
   };
 
   return (
@@ -88,6 +97,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
         variant="outline"
         type="button"
         className="flex items-center justify-between w-full relative"
+        onClick={() => handleGoogleSignIn()}
       >
         <p>Google</p>
         <img src="/images/google.png" className="absolute w-[7%] right-4" />

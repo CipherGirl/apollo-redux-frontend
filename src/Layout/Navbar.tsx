@@ -21,6 +21,7 @@ export default function Navbar() {
   const handleSignOut = () => {
     signOut(auth).then(() => dispatch(setUser(null)));
   };
+  
   return (
     <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
       <div className="h-full w-full bg-white/60">
@@ -64,12 +65,7 @@ export default function Navbar() {
                     <DropdownMenuItem className="cursor-pointer">
                       Profile
                     </DropdownMenuItem>
-
-                    {user.email ? (
-                      <DropdownMenuItem onClick={() => handleSignOut()}>
-                        Logout
-                      </DropdownMenuItem>
-                    ) : (
+                    {!user.email && (
                       <>
                         <Link to="/login">
                           <DropdownMenuItem className="cursor-pointer">
@@ -82,6 +78,11 @@ export default function Navbar() {
                           </DropdownMenuItem>
                         </Link>
                       </>
+                    )}
+                    {user.email && (
+                      <DropdownMenuItem onClick={() => handleSignOut()}>
+                        Logout
+                      </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>
                 </DropdownMenu>
