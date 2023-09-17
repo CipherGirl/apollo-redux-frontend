@@ -1,14 +1,9 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
-import {
-  createUser,
-  setUser,
-  signInWithGoogle,
-} from '@/Redux/features/user/userSlice';
+import { createUser, signInWithGoogle } from '@/Redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '@/Redux/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -34,7 +29,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
     if (user.email) {
       navigate('/');
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const onSubmit = (data: SignupFormInputs) => {
     dispatch(createUser({ email: data.email, password: data.password }));

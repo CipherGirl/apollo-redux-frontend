@@ -25,6 +25,7 @@ function useInView(): [RefObject<HTMLDivElement>, boolean] {
       // Cleanup
       return () => {
         if (ref.current) {
+          // eslint-disable-next-line react-hooks/exhaustive-deps
           observer.unobserve(ref.current);
         }
       };

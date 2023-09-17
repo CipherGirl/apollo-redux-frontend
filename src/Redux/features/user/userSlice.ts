@@ -71,7 +71,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createUser.pending, (state, action) => {
+      .addCase(createUser.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.error = null;
@@ -103,7 +103,7 @@ const userSlice = createSlice({
         state.user.email = null;
         state.error = action.error.message!;
       })
-      .addCase(loginUser.pending, (state, action) => {
+      .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.error = null;

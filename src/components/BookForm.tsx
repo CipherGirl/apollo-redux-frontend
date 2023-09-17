@@ -49,12 +49,16 @@ export function BookForm({ id }: { id: string | undefined }) {
       setValue('imageURL', book.imageURL);
       setValue('publicationDate', book.publicationDate);
     }
-  }, [book, id, setValue]);
+  }, [book, id, setValue, reset]);
 
   useEffect(() => {
     isPostSuccess && toast.success('Added a new book successfully');
     isEditSuccess && toast.success('Updated the book successfully');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     errorPost?.data?.error && toast.error(errorPost?.data?.error);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     errorEdit?.data?.error && toast.error(errorEdit?.data?.error);
   }, [isPostSuccess, isEditSuccess, errorEdit, errorPost]);
 

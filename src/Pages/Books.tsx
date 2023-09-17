@@ -48,13 +48,21 @@ const Books = () => {
     );
   };
 
-  function getUniqueValuesByProp(arr: IBook[], prop: string): string[] {
-    return arr.reduce((uniqueValues, obj) => {
-      if (!uniqueValues.includes(obj[prop])) {
-        uniqueValues.push(obj[prop]);
-      }
-      return uniqueValues;
-    }, []);
+  function getUniqueValuesByProp(
+    arr: IBook[] | undefined,
+    prop: keyof Omit<IBook, 'reviews' | '_id' | 'id'>
+  ): string[] {
+    if (!arr) return [];
+
+    const seen = new Set<string>();
+    return arr
+      .map((item) => item[prop])
+      .filter((value): value is string => {
+        if (typeof value !== 'string') return false;
+        if (seen.has(value)) return false;
+        seen.add(value);
+        return true;
+      });
   }
 
   return (
@@ -93,13 +101,14 @@ const Books = () => {
                 <SelectGroup>
                   <SelectLabel>Genre</SelectLabel>
                   <SelectItem value="all">All Book</SelectItem>
-                  {getUniqueValuesByProp(bookData.data, 'genre').map(
-                    (genre: string, index: number) => (
-                      <SelectItem value={genre} key={index}>
-                        {genre}
-                      </SelectItem>
-                    )
-                  )}
+                  {bookData.data &&
+                    getUniqueValuesByProp(bookData.data, 'genre').map(
+                      (genre, index) => (
+                        <SelectItem value={genre} key={index}>
+                          {genre}
+                        </SelectItem>
+                      )
+                    )}
                 </SelectGroup>
               </SelectContent>
             </Select>
