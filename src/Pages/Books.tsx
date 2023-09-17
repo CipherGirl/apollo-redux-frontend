@@ -52,7 +52,7 @@ const Books = () => {
                       />
                       <img
                         src={trashIcon}
-                        width={20}
+                        width={22}
                         className="m-1 cursor-pointer"
                         onClick={() => deleteBook(book._id)}
                       />
