@@ -10,6 +10,7 @@ import {
 } from '@/Redux/features/books/bookApi';
 import { Input } from '@/components/ui/input';
 import { setSearch } from '@/Redux/features/filter/filterSlice';
+import { Button } from '@/components/ui/button';
 
 const Books = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +35,16 @@ const Books = () => {
 
   return (
     <div ref={ref} className="container w-screen py-20">
-      <h1 className="text-3xl font-bold">All Books</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">All Books</h1>
+        <Button
+          className="inline border rounded-sm bg-cyan-600/25"
+          variant={'link'}
+          onClick={() => navigate('/add-book')}
+        >
+          Add New
+        </Button>
+      </div>
       {isLoading ? (
         <h2> Loading...</h2>
       ) : (
