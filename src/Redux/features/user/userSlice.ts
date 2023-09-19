@@ -14,6 +14,7 @@ interface IUserState {
   isLoading: boolean;
   isError: boolean;
   error: string | null;
+  loginError: string | null;
 }
 
 interface ICredential {
@@ -28,6 +29,7 @@ const initialState: IUserState = {
   isLoading: false,
   isError: false,
   error: null,
+  loginError: null,
 };
 
 export const createUser = createAsyncThunk(
@@ -68,6 +70,11 @@ const userSlice = createSlice({
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+    resetErrors: (state) => {
+      state.error = null;
+      state.loginError = null;
+      state.isError = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -90,37 +97,37 @@ const userSlice = createSlice({
       .addCase(signInWithGoogle.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
-        state.error = null;
+        state.loginError = null;
       })
       .addCase(signInWithGoogle.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user.email = action.payload;
-        state.error = null;
+        state.loginError = null;
       })
       .addCase(signInWithGoogle.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
         state.user.email = null;
-        state.error = action.error.message!;
+        state.loginError = action.error.message!;
       })
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
-        state.error = null;
+        state.loginError = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user.email = action.payload;
-        state.error = null;
+        state.loginError = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
         state.user.email = null;
-        state.error = action.error.message!;
+        state.loginError = action.error.message!;
       });
   },
 });
 
-export const { setUser, setLoading } = userSlice.actions;
+export const { setUser, setLoading, resetErrors } = userSlice.actions;
 export default userSlice.reducer;

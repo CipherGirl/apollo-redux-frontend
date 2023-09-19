@@ -3,10 +3,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
-import { loginUser, signInWithGoogle } from '@/Redux/features/user/userSlice';
+import {
+  loginUser,
+  resetErrors,
+  signInWithGoogle,
+} from '@/Redux/features/user/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/Redux/hooks';
+import toast from 'react-hot-toast';
 interface LoginFormInputs {
   email: string;
   password: string;
@@ -22,7 +27,7 @@ export function LoginForm() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { user, isLoading } = useAppSelector((state) => state.user);
+  const { user, isLoading, loginError } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     if (user.email && !isLoading) {
@@ -31,8 +36,19 @@ export function LoginForm() {
       } else {
         navigate('/');
       }
+      toast.success('Welcome to Book Club!');
     }
   }, [user.email, isLoading, location.state, navigate]);
+
+  useEffect(() => {
+    loginError && toast.error(loginError);
+  }, [isLoading, loginError]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetErrors());
+    };
+  }, [dispatch]);
 
   const onSubmit = (data: LoginFormInputs) => {
     dispatch(loginUser({ email: data.email, password: data.password }));
@@ -43,7 +59,7 @@ export function LoginForm() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4">
+    <div className="flex flex-col items-center justify-center p-4 mt-1">
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-6">
           <div className="grid gap-3">

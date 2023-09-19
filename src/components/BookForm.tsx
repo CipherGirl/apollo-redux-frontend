@@ -74,7 +74,7 @@ export function BookForm({ id }: { id: string | undefined }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4">
+    <div className="flex flex-col items-center justify-center p-4 mt-1">
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-6">
           <div className="grid gap-3">

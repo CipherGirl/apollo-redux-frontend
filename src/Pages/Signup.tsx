@@ -6,26 +6,8 @@ import { Link } from 'react-router-dom';
 export default function Signup() {
   return (
     <>
-      <div className="container h-[calc(100vh-72px)] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-1 lg:px-0">
+      <div className="container h-[calc(100vh-148px)] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-1 lg:px-0">
         <div className="lg:p-8">
-          <Link
-            to="/login"
-            className={cn(
-              buttonVariants({ variant: 'ghost', size: 'sm' }),
-              'absolute right-24 top-16'
-            )}
-          >
-            Login
-          </Link>
-          <Link
-            to="/"
-            className={cn(
-              buttonVariants({ variant: 'ghost', size: 'sm' }),
-              'absolute left-24 top-16'
-            )}
-          >
-            Home
-          </Link>
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
               <h1 className="text-2xl font-semibold tracking-tight">
@@ -52,6 +34,20 @@ export default function Signup() {
                 Privacy Policy
               </Link>
               .
+            </p>
+            <p className="text-center">
+              Already have account? Click here to
+              <span className="ps-1">
+                <Link
+                  to="/login"
+                  className={cn(
+                    buttonVariants({ variant: 'ghost', size: 'sm' }),
+                    'm-0 p-0 underline'
+                  )}
+                >
+                  Login
+                </Link>
+              </span>
             </p>
           </div>
         </div>

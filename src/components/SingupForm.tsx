@@ -3,10 +3,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
-import { createUser, signInWithGoogle } from '@/Redux/features/user/userSlice';
+import {
+  createUser,
+  resetErrors,
+  signInWithGoogle,
+} from '@/Redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '@/Redux/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -23,13 +28,27 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
   } = useForm<SignupFormInputs>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { user, error } = useAppSelector((state) => state.user);
+
+  const { user, error, loginError } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     if (user.email) {
       navigate('/');
+      toast.success('Welcome to Book Club!');
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    error || loginError
+      ? error && toast.error(error)
+      : loginError && toast.error(loginError);
+  }, [loginError, error]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetErrors());
+    };
+  }, [dispatch]);
 
   const onSubmit = (data: SignupFormInputs) => {
     dispatch(createUser({ email: data.email, password: data.password }));
@@ -74,7 +93,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
               autoCorrect="off"
             />
           </div>
-          {error && <p className="text-red-600 text-sm py-1">{error}</p>}
+
           <Button>Create Account</Button>
         </div>
       </form>
